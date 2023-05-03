@@ -1,0 +1,24 @@
+name: species_classifier
+channels:
+  - defaults
+  - pytorch
+  - anaconda
+dependencies:
+  - python=3.9
+  - torchvision
+  - pytorch
+  - opencv
+  - matplotlib
+  - numpy
+  - pip
+  - scikit-learn
+  - pandas
+  - keras
+  - pandas
+  - keras
+  - pre-commit
+  - tqdm
+  - pip:
+    - pygbif
+    - torchsummary
+    - timm
