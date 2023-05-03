@@ -14,13 +14,11 @@ dependencies:
   - scikit-learn
   - pandas
   - keras
-  - webdataset
   - pandas
-  - wandb
   - keras
   - pre-commit
   - tqdm
-  - timm
   - pip:
     - pygbif
     - torchsummary
+    - timm
