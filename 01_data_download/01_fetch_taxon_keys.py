@@ -51,47 +51,59 @@ def get_gbif_key_backbone(name):
     status = ["NA"]
     match_type = ["NONE"]
 
-    data = species_api.name_backbone(name=name, strict=True, rank="species")
+    data = species_api.name_backbone(name=name, strict=True, rank="SPECIES")
 
-    if data["matchType"] == "NONE":
-        confidence = [data["confidence"]]
+    # if the rank is not species then skip
+    if data["rank"] != "SPECIES":
+        print(
+            data["scientificName"]
+            + " returns rank="
+            + data["rank"]
+            + " instead of SPECIES"
+        )
+
     else:
-        taxon_key = [data["usageKey"]]
-        order = [data["order"]]
-        family = [data["family"]]
-        genus = [data["genus"]]
-        confidence = [data["confidence"]]
-        gbif_species = [data["species"]]
-        status = [data["status"]]
-        match_type = [data["matchType"]]
+        if data["matchType"] == "NONE":
+            confidence = [data["confidence"]]
 
-    df = pd.DataFrame(
-        list(
-            zip(
-                taxon_key,
-                order,
-                family,
-                genus,
-                search_species,
-                gbif_species,
-                confidence,
-                status,
-                match_type,
-            )
-        ),
-        columns=[
-            "taxon_key_gbif_id",
-            "order_name",
-            "family_name",
-            "genus_name",
-            "search_species_name",
-            "gbif_species_name",
-            "confidence",
-            "status",
-            "match_type",
-        ],
-    )
-    return df
+        else:
+
+            taxon_key = [data["usageKey"]]
+            order = [data["order"]]
+            family = [data["family"]]
+            genus = [data["genus"]]
+            confidence = [data["confidence"]]
+            gbif_species = [data["species"]]
+            status = [data["status"]]
+            match_type = [data["matchType"]]
+
+        df = pd.DataFrame(
+            list(
+                zip(
+                    taxon_key,
+                    order,
+                    family,
+                    genus,
+                    search_species,
+                    gbif_species,
+                    confidence,
+                    status,
+                    match_type,
+                )
+            ),
+            columns=[
+                "taxon_key_gbif_id",
+                "order_name",
+                "family_name",
+                "genus_name",
+                "search_species_name",
+                "gbif_species_name",
+                "confidence",
+                "status",
+                "match_type",
+            ],
+        )
+        return df
 
 
 # fetch species names from the list
