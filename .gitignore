@@ -1,2 +1,6 @@
 
 .DS_Store
+*.jpg
+01_data_download/output_data/gbif_data/*
+01_data_download/output_data/keys/*
+*.csv
