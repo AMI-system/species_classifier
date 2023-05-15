@@ -1,9 +1,9 @@
-# On Device Species Classifier
+# On-Device Species Classifier
 
 This repository contains the code to:
 - download image and metadata for moth species from GBIF (Global Biodiversity Information Facility)
 - train a deep learning model using the downloaded data to classify species of moths.
-- compress the model for deployment on device
+- compress the model for deployment on-device
 
 The code is organized in the following way:
 
