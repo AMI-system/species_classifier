@@ -55,12 +55,7 @@ def get_gbif_key_backbone(name):
 
     # if the rank is not species then skip
     if data["rank"] != "SPECIES":
-        print(
-            data["scientificName"]
-            + " returns rank="
-            + data["rank"]
-            + " instead of SPECIES"
-        )
+        print(name + " returns rank=" + data["rank"] + " instead of SPECIES")
 
     else:
         if data["matchType"] == "NONE":
