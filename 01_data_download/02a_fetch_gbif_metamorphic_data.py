@@ -111,7 +111,11 @@ for i in range(len(taxon_key)):
     if int(taxon_key[i]) in count_list["taxon_key_gbif_id"].tolist():
         print(f"Already downloaded for {species_name[i]}")
         continue
-    print("Downloading for: ", species_name[i])
+    print(
+        "Downloading for: ",
+        species_name[i],
+        "(" + str(i) + "/" + str(len(taxon_key)) + ")",
+    )
     begin = time.time()
     if taxon_key[i] == -1:  # taxa not there on GBIF
         count_list = count_list.append(
@@ -232,3 +236,6 @@ for i in range(len(taxon_key)):
             )
 
     count_list.to_csv(write_dir + "datacount.csv", index=False)
+
+
+print("I'm finished downloading all the data! :)")

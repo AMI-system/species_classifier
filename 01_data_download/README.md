@@ -42,4 +42,16 @@ The description of the arguments to the script:
 * `--max_images_per_species`: Maximum number of images to download for any species. Optional. **Default** is **500**.
 * `--resume_session`: `True` or `False`, whether resuming a previously stopped downloading session. **Requried**.
 
+To run with nohup:
+
+```bash
+nohup python -u 02a_fetch_gbif_metamorphic_data.py \
+    --write_directory output_data/gbif_data/ \
+    --species_key_filepath output_data/keys/uksi-macro-moth_data.csv \
+    --max_images_per_species 500 \
+    --resume_session True &
+```
+
+Explaination: The `-u` argument force the stdout and stderr streams to be unbuffered
+
 It is quite possible to have a list of hundreds or thousands of species and maybe downloading half-a-million images. The downloading process is not too fast and can take days to complete in such cases. The script does not require to be executed in one continuous session and the data can be fetched in multiple downloading parts. If the user is resuming a previous downloading session, `True` should be passed to the `--resume_session` argument and `False` for downloading from scratch.

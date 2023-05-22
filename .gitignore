@@ -4,3 +4,9 @@
 01_data_download/output_data/gbif_data/*
 01_data_download/output_data/keys/*
 *.csv
+*.out
+*.txt
+01_data_download/gbif_species_trainer/bin/*
+01_data_download/gbif_species_trainer/lib/*
+*.cfg
+02_model_training/saved_models/*

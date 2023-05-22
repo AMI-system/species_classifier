@@ -13,6 +13,9 @@ About        : This script fetches unique taxon keys for species list
 from pygbif import species as species_api
 import pandas as pd
 import argparse
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 parser = argparse.ArgumentParser()
@@ -51,10 +54,12 @@ def get_gbif_key_backbone(name):
     status = ["NA"]
     match_type = ["NONE"]
 
-    data = species_api.name_backbone(name=name, strict=True, rank="SPECIES")
+    data = species_api.name_backbone(name=name, strict=True, rank="species")
 
-    # if the rank is not species then skip
-    if data["rank"] != "SPECIES":
+    if "rank" not in data:
+        print(name + " returns no rank")
+
+    elif data["rank"] != "SPECIES":
         print(name + " returns rank=" + data["rank"] + " instead of SPECIES")
 
     else:
