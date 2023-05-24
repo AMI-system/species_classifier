@@ -10,3 +10,5 @@
 01_data_download/gbif_species_trainer/lib/*
 *.cfg
 02_model_training/saved_models/*
+*.pickle
+*.tflite
