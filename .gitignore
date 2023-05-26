@@ -12,3 +12,7 @@
 02_model_training/tensorflow/saved_models/*
 *.pickle
 *.tflite
+*.json
+*.tar
+*ipynb_checkpoints*
+*.pyc
