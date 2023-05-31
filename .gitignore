@@ -1,18 +1,30 @@
-
+# general files to ignore
 .DS_Store
 *.jpg
+*ipynb_checkpoints*
+*.pyc
+
+# ignore downloaded data and statistics
 01_data_download/output_data/gbif_data/*
 01_data_download/output_data/keys/*
+01_data_download/gbif_species_trainer/bin/*
+01_data_download/gbif_species_trainer/lib/*
 *.csv
 *.out
 *.txt
-01_data_download/gbif_species_trainer/bin/*
-01_data_download/gbif_species_trainer/lib/*
-*.cfg
+*.tar
+
+# ignore tensorflow models
 02_model_training/tensorflow/saved_models/*
+*.cfg
 *.pickle
 *.tflite
 *.json
-*.tar
-*ipynb_checkpoints*
-*.pyc
+
+# ignore pytorch models
+*.snapshot
+*.pb
+*.metadata
+
+# ignore all wandb files
+/02_model_training/pytorch/wandb/*

@@ -93,13 +93,16 @@ python 03-create_webdataset.py \
     --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/test/val/val-500-%06d.tar"
 ```
 
-## 4. `04_train_model.py`
+## 4. Training the Pytorch model
+
+This step required the use of [wandb](https://wandb.ai/site). The user needs to create an account and login to the platform. The user will then need to set up a project and pass the `entity` (username) and `project` into the config file. The user can then run either the `pytorch_model.ipynb` or the script `04_train_model.py` as follows:
+
 
 ```bash
 python 04_train_model.py \
-    --train_webdataset_url /Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/test/train/
-    --val_webdataset_url /Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/test/val/
-    --test_webdataset_url /Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/test/test/
+    --train_webdataset_url "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data2/datasets/test/train/train-500-{000000..000002}.tar"
+    --val_webdataset_url "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data2/datasets/test/val/val-500-000000.tar"
+    --test_webdataset_url "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data2/datasets/test/test/test-500-000000.tar"
     --config_file ./configs/01_uk_moth_data_config.yaml
     --dataloader_num_workers 4
     --random_seed 42
@@ -114,4 +117,4 @@ The description of the arguments to the script:
 * `--dataloader_num_workers`: number of cpus available
 * `--random_seed`: random seed for reproducible experiments
 
-
+These are defined within the notebook

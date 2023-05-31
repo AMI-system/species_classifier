@@ -35,6 +35,7 @@ class ConfusionDataConvert:
         genus_labels = self.genus_to_label_gt(
             self.species_to_genus_gt(self.label_to_spname_gt())
         )
+
         genus_predict_indx_1 = self.genus_to_label_pr(
             self.species_to_genus_pr(self.label_to_spname_pr(predict_indx_1))
         )
@@ -132,6 +133,7 @@ class ConfusionDataConvert:
         label_info = json.load(f)
         species_list = label_info["species_list"]
         pred_species_name = []
+        print(len(species_list))
 
         for batch in pred:
             species_name = []
