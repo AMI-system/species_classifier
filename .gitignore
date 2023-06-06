@@ -28,3 +28,4 @@
 
 # ignore all wandb files
 /02_model_training/pytorch/wandb/*
+*.pt

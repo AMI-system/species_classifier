@@ -8,12 +8,12 @@ This creates training, validation and testing splits of the data downloaded from
 
 ```bash
 python 01_create_dataset_split.py \
-    --data_dir ../../01_data_download/output_data/gbif_test/ \
+    --data_dir ../../01_data_download/output_data/gbif_macro/ \
     --write_dir ./data/ \
     --train_ratio 0.75 \
     --val_ratio 0.10 \
     --test_ratio 0.15 \
-    --filename 01_uk_test_data
+    --filename 01_uk_macro_data
 ```
 
 The description of the arguments to the script:
@@ -32,12 +32,12 @@ This calculates information and statistics regarding the taxonomy to be used for
 
 ```bash
 python 02_calculate_taxa_statistics.py \
-    --species_list ../../01_data_download/output_data/keys/uksi-test_data.csv \
+    --species_list ../../01_data_download/output_data/keys/uksi-macro-moth_data.csv \
     --write_dir ./data/ \
-    --numeric_labels_filename 01_uk_test_data_numeric_labels \
-    --taxon_hierarchy_filename 01_uk_test_data_taxon_hierarchy \
-    --training_points_filename 01_uk_test_data_count_training_points \
-    --train_split_file ./data/01_uk_test_data-train-split.csv
+    --numeric_labels_filename 01_uk_macro_data_numeric_labels \
+    --taxon_hierarchy_filename 01_uk_macro_data_taxon_hierarchy \
+    --training_points_filename 01_uk_macro_data_count_training_points \
+    --train_split_file ./data/01_uk_macro_data-train-split.csv
 ```
 
 The description of the arguments to the script:
@@ -52,16 +52,21 @@ The description of the arguments to the script:
 
 ## 3. `03_create_webdataset.py`: Creates webdataset from raw image data. It needs to be run individually for each of the train, validation and test sets.
 
-Train:
+So we will loop through each set:
 
 ```bash
-python 03-create_webdataset.py \
-    --dataset_dir ../../01_data_download/output_data/gbif_test/ \
-    --dataset_filepath ./data/01_uk_test_data-train-split.csv \
-    --label_filepath ./data/01_uk_test_data_numeric_labels.json \
-    --image_resize 500 \
-    --max_shard_size 100000000 \
-    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/test/train/train-500-%06d.tar"
+for VARIABLE in 'val' 'test' 'train'
+do
+    print $VARIABLE
+    mkdir -p ./data/datasets/macro/$VARIABLE
+    python 03-create_webdataset.py \
+        --dataset_dir ../../01_data_download/output_data/gbif_macro/ \
+        --dataset_filepath ./data/01_uk_macro_data-$VARIABLE-split.csv \
+        --label_filepath ./data/01_uk_macro_data_numeric_labels.json \
+        --image_resize 500 \
+        --max_shard_size 100000000 \
+        --webdataset_pattern "./data/datasets/macro/$VARIABLE/$VARIABLE-500-%06d.tar"
+done
 ```
 
 The description of the arguments to the script:
@@ -73,39 +78,48 @@ The description of the arguments to the script:
 * `--max_shard_size`: The maximum shard size in bytes. Optional. **Default** is **10^8 (100 MB)**.
 * `--random_seed`: Random seed for reproducible experiments. Optional. **Default** is **42**.
 
-```bash
-python 03-create_webdataset.py \
-    --dataset_dir ../../01_data_download/output_data/gbif_test/ \
-    --dataset_filepath ./data/01_uk_test_data-test-split.csv \
-    --label_filepath ./data/01_uk_test_data_numeric_labels.json \
-    --image_resize 500 \
-    --max_shard_size 100000000 \
-    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/test/test/test-500-%06d.tar"
-```
+
+Or you can run them all individually:
 
 ```bash
 python 03-create_webdataset.py \
-    --dataset_dir ../../01_data_download/output_data/gbif_test/ \
-    --dataset_filepath ./data/01_uk_test_data-val-split.csv \
-    --label_filepath ./data/01_uk_test_data_numeric_labels.json \
+    --dataset_dir ../../01_data_download/output_data/gbif_macro/ \
+    --dataset_filepath ./data/01_uk_macro_data-train-split.csv \
+    --label_filepath ./data/01_uk_macro_data_numeric_labels.json \
     --image_resize 500 \
     --max_shard_size 100000000 \
-    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/test/val/val-500-%06d.tar"
+    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/macro/train/train-500-%06d.tar"
+
+python 03-create_webdataset.py \
+    --dataset_dir ../../01_data_download/output_data/gbif_macro/ \
+    --dataset_filepath ./data/01_uk_macro_data-test-split.csv \
+    --label_filepath ./data/01_uk_macro_data_numeric_labels.json \
+    --image_resize 500 \
+    --max_shard_size 100000000 \
+    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/macro/test/test-500-%06d.tar"
+
+python 03-create_webdataset.py \
+    --dataset_dir ../../01_data_download/output_data/gbif_macro/ \
+    --dataset_filepath ./data/01_uk_macro_data-val-split.csv \
+    --label_filepath ./data/01_uk_macro_data_numeric_labels.json \
+    --image_resize 500 \
+    --max_shard_size 100000000 \
+    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/macro/val/val-500-%06d.tar"
 ```
 
 ## 4. Training the Pytorch model
 
-This step required the use of [wandb](https://wandb.ai/site). The user needs to create an account and login to the platform. The user will then need to set up a project and pass the `entity` (username) and `project` into the config file. The user can then run either the `pytorch_model.ipynb` or the script `04_train_model.py` as follows:
-
+This step required the use of [wandb](https://wandb.ai/site). The user needs to create an account and login to the platform. The user will then need to set up a project and pass the `entity` (username) and `project` into the config file. The user can then run either through the script `04_train_model.py`:
 
 ```bash
-python 04_train_model.py \
-    --train_webdataset_url "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data2/datasets/test/train/train-500-{000000..000002}.tar"
-    --val_webdataset_url "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data2/datasets/test/val/val-500-000000.tar"
-    --test_webdataset_url "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data2/datasets/test/test/test-500-000000.tar"
-    --config_file ./configs/01_uk_moth_data_config.yaml
-    --dataloader_num_workers 4
-    --random_seed 42
+nohup sh -c 'python 04_train_model.py  \
+    --train_webdataset_url "./data2/datasets/macro/train/train-500-{000000..000067}.tar" \
+    --val_webdataset_url "./data2/datasets/macro/val/val-500-{000000..000009}.tar" \
+    --test_webdataset_url "./data2/datasets/macro/test/test-500-{000000..000013}.tar" \
+    --config_file ./configs/01_uk_macro_data_config.json \
+    --dataloader_num_workers 4 \
+    --random_seed 42' &
+
 ```
 
 The description of the arguments to the script:
@@ -117,4 +131,6 @@ The description of the arguments to the script:
 * `--dataloader_num_workers`: number of cpus available
 * `--random_seed`: random seed for reproducible experiments
 
-These are defined within the notebook
+*For setting up the config file* The total families, genuses, and species are spit out at the end of `02_calculate_taxa_statistics.py` so you can use this info to fill in the config lines 5-7.
+
+Or using the jupyter notebook `pytorch_model.ipynb`. This is mostly for debugging purposes

@@ -10,9 +10,9 @@ Step 1 involves fetching unique taxon keys for each species from GBIF Taxanomy b
 
 ```bash
 python 01_fetch_taxon_keys.py \
-    --species_filepath species_lists/uksi-test.csv \
+    --species_filepath species_lists/uksi-macro-moths.csv \
     --column_name taxon \
-    --output_filepath output_data/keys/uksi-test_data.csv
+    --output_filepath output_data/keys/uksi-macro_data.csv
 ```
 The description of the arguments to the script:
 * `--species_filepath`: The user's list of species names. Example species lists are provided in the `species_lists` folder. **Required**.
@@ -29,8 +29,8 @@ If the user needs to download data for species - such as moths, butterflies or f
 
 ```bash
 python 02a_fetch_gbif_metamorphic_data.py \
---write_directory output_data/gbif_data/ \
---species_key_filepath output_data/keys/uksi-test_data.csv \
+--write_directory output_data/gbif_macro/ \
+--species_key_filepath output_data/keys/uksi-macro_data.csv \
 --max_images_per_species 500 \
 --resume_session True
 ```
@@ -46,8 +46,8 @@ To run with nohup:
 
 ```bash
 nohup python -u 02a_fetch_gbif_metamorphic_data.py \
-    --write_directory output_data/gbif_data/ \
-    --species_key_filepath output_data/keys/uksi-macro-moth_data.csv \
+    --write_directory output_data/gbif_macro/ \
+    --species_key_filepath output_data/keys/uksi-macro_data.csv \
     --max_images_per_species 500 \
     --resume_session True &
 ```
