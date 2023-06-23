@@ -8,8 +8,8 @@ This creates training, validation and testing splits of the data downloaded from
 
 ```bash
 python 01_create_dataset_split.py \
-    --data_dir ../../01_data_download/output_data/gbif_macro/ \
-    --write_dir ./data/ \
+    --data_dir ../../../../data/gbif_macro_data/gbif_macro/ \
+    --write_dir ../../../../data/gbif_macro_data/ \
     --train_ratio 0.75 \
     --val_ratio 0.10 \
     --test_ratio 0.15 \
@@ -32,12 +32,12 @@ This calculates information and statistics regarding the taxonomy to be used for
 
 ```bash
 python 02_calculate_taxa_statistics.py \
-    --species_list ../../01_data_download/output_data/keys/uksi-macro-moth_data.csv \
-    --write_dir ./data/ \
+    --species_list ../../01_data_download/output_data/keys/uksi-macro_data.csv \
+    --write_dir ../../../../data/gbif_macro_data/ \
     --numeric_labels_filename 01_uk_macro_data_numeric_labels \
     --taxon_hierarchy_filename 01_uk_macro_data_taxon_hierarchy \
     --training_points_filename 01_uk_macro_data_count_training_points \
-    --train_split_file ./data/01_uk_macro_data-train-split.csv
+    --train_split_file ../../../../data/gbif_macro_data/01_uk_macro_data-train-split.csv
 ```
 
 The description of the arguments to the script:
@@ -57,15 +57,15 @@ So we will loop through each set:
 ```bash
 for VARIABLE in 'val' 'test' 'train'
 do
-    print $VARIABLE
+    echo $VARIABLE
     mkdir -p ./data/datasets/macro/$VARIABLE
     python 03-create_webdataset.py \
-        --dataset_dir ../../01_data_download/output_data/gbif_macro/ \
-        --dataset_filepath ./data/01_uk_macro_data-$VARIABLE-split.csv \
-        --label_filepath ./data/01_uk_macro_data_numeric_labels.json \
+        --dataset_dir ../../../../data/gbif_macro_data/gbif_macro/ \
+        --dataset_filepath ../../../../data/gbif_macro_data//01_uk_macro_data-$VARIABLE-split.csv \
+        --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
         --image_resize 500 \
         --max_shard_size 100000000 \
-        --webdataset_pattern "./data/datasets/macro/$VARIABLE/$VARIABLE-500-%06d.tar"
+        --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/$VARIABLE/$VARIABLE-500-%06d.tar"
 done
 ```
 
@@ -83,44 +83,46 @@ Or you can run them all individually:
 
 ```bash
 python 03-create_webdataset.py \
-    --dataset_dir ../../01_data_download/output_data/gbif_macro/ \
-    --dataset_filepath ./data/01_uk_macro_data-train-split.csv \
-    --label_filepath ./data/01_uk_macro_data_numeric_labels.json \
+    --dataset_dir ../../../../data/gbif_macro_data/gbif_macro/ \
+    --dataset_filepath ../../../../data/gbif_macro_data/01_uk_macro_data-train-split.csv \
+    --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
     --image_resize 500 \
     --max_shard_size 100000000 \
-    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/macro/train/train-500-%06d.tar"
+    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/macro/train/train-500-%06d.tar"
 
 python 03-create_webdataset.py \
-    --dataset_dir ../../01_data_download/output_data/gbif_macro/ \
-    --dataset_filepath ./data/01_uk_macro_data-test-split.csv \
-    --label_filepath ./data/01_uk_macro_data_numeric_labels.json \
+    --dataset_dir ../../../../data/gbif_macro_data/gbif_macro/ \
+    --dataset_filepath ../../../../data/gbif_macro_data/01_uk_macro_data-test-split.csv \
+    --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
     --image_resize 500 \
     --max_shard_size 100000000 \
-    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/macro/test/test-500-%06d.tar"
+    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/macro/test/test-500-%06d.tar"
 
 python 03-create_webdataset.py \
-    --dataset_dir ../../01_data_download/output_data/gbif_macro/ \
-    --dataset_filepath ./data/01_uk_macro_data-val-split.csv \
-    --label_filepath ./data/01_uk_macro_data_numeric_labels.json \
+    --dataset_dir ../../../../data/gbif_macro_data/gbif_macro/ \
+    --dataset_filepath ../../../../data/gbif_macro_data/01_uk_macro_data-val-split.csv \
+    --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
     --image_resize 500 \
     --max_shard_size 100000000 \
-    --webdataset_pattern "/Users/kgoldmann/Documents/Projects/AMBER/on_device_classifier/02_model_training/pytorch/data/datasets/macro/val/val-500-%06d.tar"
+    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/macro/val/val-500-%06d.tar"
 ```
 
 ## 4. Training the Pytorch model
 
-This step required the use of [wandb](https://wandb.ai/site). The user needs to create an account and login to the platform. The user will then need to set up a project and pass the `entity` (username) and `project` into the config file. The user can then run either through the script `04_train_model.py`:
+This step required the use of [wandb](https://wandb.ai/site). The user needs to create an account and login to the platform. The user will then need to set up a project and pass the `entity` (username) and `project` into the config file. The user can then run either: 
+- through the script `04_train_model.py`:
+- nohup
+    ```bash
+    nohup sh -c 'python 04_train_model.py  \
+        --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000067}.tar" \
+        --val_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/val/val-500-{000000..000009}.tar" \
+        --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000013}.tar" \
+        --config_file ./configs/01_uk_macro_data_config.json \
+        --dataloader_num_workers 4 \
+        --random_seed 42' &
+    ```
+- using ```sbatch model_training.sh``` which will output to `train.out`
 
-```bash
-nohup sh -c 'python 04_train_model.py  \
-    --train_webdataset_url "./data2/datasets/macro/train/train-500-{000000..000067}.tar" \
-    --val_webdataset_url "./data2/datasets/macro/val/val-500-{000000..000009}.tar" \
-    --test_webdataset_url "./data2/datasets/macro/test/test-500-{000000..000013}.tar" \
-    --config_file ./configs/01_uk_macro_data_config.json \
-    --dataloader_num_workers 4 \
-    --random_seed 42' &
-
-```
 
 The description of the arguments to the script:
 

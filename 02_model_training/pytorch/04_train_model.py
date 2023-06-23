@@ -10,6 +10,7 @@ import time
 import argparse
 import random
 
+
 from models.build_model import build_model
 from training_params.loss import Loss
 from training_params.optimizer import Optimizer
@@ -26,16 +27,15 @@ from evaluation.macro_accuracy_batch import (
 from evaluation.confusion_matrix_data import confusion_matrix_data
 from evaluation.confusion_data_conversion import ConfusionDataConvert
 
-
 def train_model(args):
     """main function for training"""
 
     config_file = args.config_file
     f = open(config_file)
     config_data = json.load(f)
-    print(json.dumps(config_data, indent=3))
+    #print(json.dumps(config_data, indent=3))
 
-    print(config_data["training"]["wandb"]["project"])
+    #print(config_data["training"]["wandb"]["project"])
 
     # Initialize wandb
 
@@ -76,16 +76,24 @@ def train_model(args):
     save_path = (
         mod_save_pth + mod_name + "_" + mod_ver + "_" + model_type + "_" + DTSTR + ".pt"
     )
+    print("Saving model to: " + save_path)
 
     taxon_hierar = config_data["dataset"]["taxon_hierarchy"]
     label_info = config_data["dataset"]["label_info"]
 
-    if (torch.cuda.is_available()) and (not torch.backends.mps.is_available()):
+    if (torch.cuda.is_available()): 
         device = "cuda"
-    elif torch.backends.mps.is_available():
-        device = "mps"
     else:
         device = "cpu"
+
+    # # try torch.backends.mps.is_available()
+    # try:
+    #     torch.backends.mps.is_available()
+    # except Exception:
+    #     print('not M1 arm')
+    # else:     
+    #     device = "mps"
+
 
     print(device)
 
@@ -139,7 +147,7 @@ def train_model(args):
     lowest_val_loss = start_val_los
     early_stp_count = 0
 
-    for epoch in tqdm(range(epochs)):
+    for epoch in tqdm(range(0, 2)): #range(epochs)):
         train_loss = 0
         train_batch_cnt = 0
         val_loss = 0
@@ -384,35 +392,30 @@ def set_random_seed(random_seed):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    print("A")
     parser.add_argument(
         "--train_webdataset_url",
         help="path to webdataset tar files for training",
         required=True,
     )
 
-    print("B")
     parser.add_argument(
         "--val_webdataset_url",
         help="path to webdataset tar files for validation",
         required=True,
     )
 
-    print("C")
     parser.add_argument(
         "--test_webdataset_url",
         help="path to webdataset tar files for testing",
         required=True,
     )
 
-    print("D")
     parser.add_argument(
         "--config_file",
         help="path to configuration file containing training information",
         required=True,
     )
 
-    print("E")
     parser.add_argument(
         "--dataloader_num_workers",
         help="number of cpus available",
@@ -420,7 +423,6 @@ if __name__ == "__main__":
         type=int,
     )
 
-    print("F")
     parser.add_argument(
         "--random_seed",
         help="random seed for reproducible experiments",

@@ -14,3 +14,14 @@ The code is organized in the following way:
     └─ tensorflow: contains the code to train the model using tensorflow
 
 1. model_compression: contains the code to compress the trained model
+
+
+## Virtual Environment 
+
+To set up a virtual environemtn
+
+```bash
+python -m venv --system-site-packages gbif_species_classifier
+source gbif_species_classifier/bin/activate
+pip install -r requirements.txt
+```

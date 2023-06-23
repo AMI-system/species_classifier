@@ -29,7 +29,7 @@ If the user needs to download data for species - such as moths, butterflies or f
 
 ```bash
 python 02a_fetch_gbif_metamorphic_data.py \
---write_directory output_data/gbif_macro/ \
+--write_directory ../../../data/gbif_macro_data/gbif_macro/ \
 --species_key_filepath output_data/keys/uksi-macro_data.csv \
 --max_images_per_species 500 \
 --resume_session True
@@ -46,7 +46,7 @@ To run with nohup:
 
 ```bash
 nohup python -u 02a_fetch_gbif_metamorphic_data.py \
-    --write_directory output_data/gbif_macro/ \
+    --write_directory ../../../data/gbif_macro_data/gbif_macro/ \
     --species_key_filepath output_data/keys/uksi-macro_data.csv \
     --max_images_per_species 500 \
     --resume_session True &

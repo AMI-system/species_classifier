@@ -11,6 +11,7 @@
 01_data_download/gbif_species_trainer/lib/*
 *.csv
 *.out
+*.stats
 *.txt
 *.tar
 
