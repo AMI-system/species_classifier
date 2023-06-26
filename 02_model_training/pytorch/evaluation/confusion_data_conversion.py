@@ -133,7 +133,6 @@ class ConfusionDataConvert:
         label_info = json.load(f)
         species_list = label_info["species_list"]
         pred_species_name = []
-        print(len(species_list))
 
         for batch in pred:
             species_name = []

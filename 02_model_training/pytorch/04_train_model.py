@@ -147,7 +147,7 @@ def train_model(args):
     lowest_val_loss = start_val_los
     early_stp_count = 0
 
-    for epoch in tqdm(range(0, 2)): #range(epochs)):
+    for epoch in tqdm(range(0, 2)):   #range(epochs)):
         train_loss = 0
         train_batch_cnt = 0
         val_loss = 0
@@ -211,24 +211,26 @@ def train_model(args):
         if val_loss < lowest_val_loss:
             if torch.cuda.device_count() > 1:
                 torch.save(
-                    {
-                        "epoch": epoch,
-                        "model_state_dict": model.module.state_dict(),
-                        "optimizer_state_dict": optimizer.state_dict(),
-                        "train_loss": train_loss,
-                        "val_loss": val_loss,
-                    },
+                    # {
+                    #     "epoch": epoch,
+                    #     "model_state_dict": model.module.state_dict(),
+                    #     "optimizer_state_dict": optimizer.state_dict(),
+                    #     "train_loss": train_loss,
+                    #     "val_loss": val_loss,
+                    # },
+                    model,
                     save_path,
                 )
             else:
                 torch.save(
-                    {
-                        "epoch": epoch,
-                        "model_state_dict": model.state_dict(),
-                        "optimizer_state_dict": optimizer.state_dict(),
-                        "train_loss": train_loss,
-                        "val_loss": val_loss,
-                    },
+                    # {
+                    #     "epoch": epoch,
+                    #     "model_state_dict": model.state_dict(),
+                    #     "optimizer_state_dict": optimizer.state_dict(),
+                    #     "train_loss": train_loss,
+                    #     "val_loss": val_loss,
+                    # },
+                    model,
                     save_path,
                 )
 
