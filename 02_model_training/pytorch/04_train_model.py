@@ -27,6 +27,11 @@ from evaluation.macro_accuracy_batch import (
 from evaluation.confusion_matrix_data import confusion_matrix_data
 from evaluation.confusion_data_conversion import ConfusionDataConvert
 
+print("\n\n---- CUDA tests tests ----\n\n")
+print(torch.zeros(1).cuda())
+print(torch.cuda.is_available())
+print("\n\n---------------------------\n\n")
+
 def train_model(args):
     """main function for training"""
 
@@ -147,7 +152,7 @@ def train_model(args):
     lowest_val_loss = start_val_los
     early_stp_count = 0
 
-    for epoch in tqdm(range(0, 2)):   #range(epochs)):
+    for epoch in tqdm(range(epochs)): #range(0, 2)):
         train_loss = 0
         train_batch_cnt = 0
         val_loss = 0
