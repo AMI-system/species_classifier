@@ -14,6 +14,7 @@ python 01_fetch_taxon_keys.py \
     --column_name taxon \
     --output_filepath output_data/keys/uksi-macro_data.csv
 ```
+
 The description of the arguments to the script:
 * `--species_filepath`: The user's list of species names. Example species lists are provided in the `species_lists` folder. **Required**.
 * `--column_name`: The column name in the above csv file containing the species' names. **Required**.

@@ -1,10 +1,10 @@
 #!/bin/bash 
 #SBATCH --qos=turing
 #SBATCH --cpus-per-task=6      
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --mem=150G
 #SBATCH --output=train.out
-#SBATCH --time=10:00:00          # total run time limit (HH:MM:SS)
+#SBATCH --time=10:00:00          # total run time limit (DD-HH:MM:SS)
 
 # 1. Load the required modules
 module purge; module load baskerville

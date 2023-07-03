@@ -30,3 +30,6 @@
 # ignore all wandb files
 /02_model_training/pytorch/wandb/*
 *.pt
+gbif_species_classifier/*
+kg_py_3.8/*
+outputs/*

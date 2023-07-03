@@ -52,7 +52,7 @@ MAX_DATA_SP = args.max_images_per_species
 LIMIT_DOWN = 300  # GBIF API parameter for max results per page
 MAX_SEARCHES = 11000  # maximum no. of points to iterate
 moth_data = pd.read_csv(species_list)
-RESUME_SESSION = False  # args.resume_session
+RESUME_SESSION = args.resume_session
 
 
 # Downloading gbif data

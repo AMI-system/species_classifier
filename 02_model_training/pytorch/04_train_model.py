@@ -27,7 +27,7 @@ from evaluation.macro_accuracy_batch import (
 from evaluation.confusion_matrix_data import confusion_matrix_data
 from evaluation.confusion_data_conversion import ConfusionDataConvert
 
-print("\n\n---- CUDA tests tests ----\n\n")
+print("\n\n---- CUDA tests ----------\n\n")
 print(torch.zeros(1).cuda())
 print(torch.cuda.is_available())
 print("\n\n---------------------------\n\n")
