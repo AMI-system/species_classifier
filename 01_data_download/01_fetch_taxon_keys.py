@@ -56,6 +56,7 @@ def get_gbif_key_backbone(name):
 
     data = species_api.name_backbone(name=name, strict=True, rank="species")
 
+    # if rank not a key in data
     if "rank" not in data:
         print(name + " returns no rank")
 
