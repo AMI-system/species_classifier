@@ -47,6 +47,7 @@ def train_model(args):
     wandb.init(
         project=config_data["training"]["wandb"]["project"],
         entity=config_data["training"]["wandb"]["entity"],
+        tags="pytorch"
     )
     wandb.init(settings=wandb.Settings(start_method="fork"))
 

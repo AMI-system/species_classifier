@@ -48,6 +48,8 @@ The description of the arguments to the script:
 * `--training_points_filename`: Filename for storing the count of training points. **Required**.
 * `--train_split_file`: Path to the training split file. **Required**.
 
+**THEN** after this is done you need to add the number fo families, genus, and species to the `./configs/01_uk_macro_data_config.json` file. This is done manually.
+
 <br>
 
 ## 3. `03_create_webdataset.py`: Creates webdataset from raw image data. It needs to be run individually for each of the train, validation and test sets.
@@ -88,7 +90,7 @@ python 03-create_webdataset.py \
     --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
     --image_resize 500 \
     --max_shard_size 100000000 \
-    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/macro/train/train-500-%06d.tar"
+    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/train/train-500-%06d.tar"
 
 python 03-create_webdataset.py \
     --dataset_dir ../../../../data/gbif_macro_data/gbif_macro/ \
@@ -96,7 +98,7 @@ python 03-create_webdataset.py \
     --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
     --image_resize 500 \
     --max_shard_size 100000000 \
-    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/macro/test/test-500-%06d.tar"
+    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/test/test-500-%06d.tar"
 
 python 03-create_webdataset.py \
     --dataset_dir ../../../../data/gbif_macro_data/gbif_macro/ \
@@ -104,7 +106,7 @@ python 03-create_webdataset.py \
     --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
     --image_resize 500 \
     --max_shard_size 100000000 \
-    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/macro/val/val-500-%06d.tar"
+    --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/val/val-500-%06d.tar"
 ```
 
 ## 4. Training the Pytorch model
@@ -114,9 +116,9 @@ This step required the use of [wandb](https://wandb.ai/site). The user needs to 
 - nohup
     ```bash
     nohup sh -c 'python 04_train_model.py  \
-        --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000067}.tar" \
-        --val_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/val/val-500-{000000..000009}.tar" \
-        --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000013}.tar" \
+        --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000396}.tar" \
+        --val_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/val/val-500-{000000..000052}.tar" \
+        --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000079}.tar" \
         --config_file ./configs/01_uk_macro_data_config.json \
         --dataloader_num_workers 4 \
         --random_seed 42' &
