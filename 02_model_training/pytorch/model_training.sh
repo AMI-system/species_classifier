@@ -20,15 +20,15 @@ source /bask/projects/v/vjgo8416-amber/venv/kg_py_3.8/bin/activate
 
 # 4. (Optional) load the python packages, if required
 #pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
-# pip3 install torch torchvision torchaudio -U
+#pip3 install torch torchvision torchaudio -U
 #pip install -r /bask/homes/f/fspo1218/amber/projects/on_device_classifier/requirements.txt
 #pip install timm
 
 # 5. Train the model
 python 04_train_model.py  \
-    --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000067}.tar" \
-    --val_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/val/val-500-{000000..000009}.tar" \
-    --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000013}.tar" \
+    --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000396}.tar" \
+    --val_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/val/val-500-{000000..000052}.tar" \
+    --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000079}.tar" \
     --config_file ./configs/01_uk_macro_data_config.json \
     --dataloader_num_workers 6 \
     --random_seed 42

@@ -32,4 +32,4 @@
 *.pt
 gbif_species_classifier/*
 kg_py_3.8/*
-outputs/*
+02_model_training/pytorch/outputs/*
