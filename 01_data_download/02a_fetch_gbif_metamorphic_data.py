@@ -17,6 +17,7 @@ import json
 import time
 import math
 import argparse
+from urllib.parse import quote  
 
 
 parser = argparse.ArgumentParser()
@@ -184,7 +185,13 @@ for i in range(len(taxon_key)):
 
                             if "identifier" in first_media.keys():
                                 image_url = first_media["identifier"]
-                                try:
+                                try:                                    
+                                    # catch non-ascii characters in url
+                                    if not all(ord(c) < 128 for c in image_url):
+                                        image_url = quote(image_url, safe='/:?=&')
+                                        print(image_url)
+                                    
+                                    
                                     urllib.request.urlretrieve(
                                         image_url, write_loc + "/" + gbifid + ".jpg"
                                     )
