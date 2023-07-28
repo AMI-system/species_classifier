@@ -12,8 +12,9 @@ Step 1 involves fetching unique taxon keys for each species from GBIF Taxanomy b
 python 01_fetch_taxon_keys.py \
     --species_filepath species_lists/uksi-macro-moths.csv \
     --column_name taxon \
-    --output_filepath output_data/keys/uksi-macro-moth_data.csv
+    --output_filepath output_data/keys/uksi-macro_data.csv
 ```
+
 The description of the arguments to the script:
 * `--species_filepath`: The user's list of species names. Example species lists are provided in the `species_lists` folder. **Required**.
 * `--column_name`: The column name in the above csv file containing the species' names. **Required**.
@@ -29,8 +30,8 @@ If the user needs to download data for species - such as moths, butterflies or f
 
 ```bash
 python 02a_fetch_gbif_metamorphic_data.py \
---write_directory output_data/gbif_data/ \
---species_key_filepath output_data/keys/uksi-macro-moth_data.csv \
+--write_directory ../../../data/gbif_macro_data/gbif_macro/ \
+--species_key_filepath output_data/keys/uksi-macro_data.csv \
 --max_images_per_species 500 \
 --resume_session True
 ```
@@ -42,4 +43,33 @@ The description of the arguments to the script:
 * `--max_images_per_species`: Maximum number of images to download for any species. Optional. **Default** is **500**.
 * `--resume_session`: `True` or `False`, whether resuming a previously stopped downloading session. **Requried**.
 
+To run with nohup:
+
+```bash
+nohup python -u 02a_fetch_gbif_metamorphic_data.py \
+    --write_directory ../../../data/gbif_macro_data/gbif_macro/ \
+    --species_key_filepath output_data/keys/uksi-macro_data.csv \
+    --max_images_per_species 500 \
+    --resume_session True &
+```
+
+Explaination: The `-u` argument force the stdout and stderr streams to be unbuffered
+
 It is quite possible to have a list of hundreds or thousands of species and maybe downloading half-a-million images. The downloading process is not too fast and can take days to complete in such cases. The script does not require to be executed in one continuous session and the data can be fetched in multiple downloading parts. If the user is resuming a previous downloading session, `True` should be passed to the `--resume_session` argument and `False` for downloading from scratch.
+
+
+## 3. Update data statistics
+
+The final step is to update the statistics (image count of each species) of the downloaded data in the root folder.
+
+```
+python 03_update_data_statistics.py \
+--data_directory ../../../data/gbif_macro_data/gbif_macro/ \
+--species_checklist output_data/keys/uksi-macro_data.csv
+```
+
+The description of the arguments to the script:
+
+`--data_directory`: Path to the folder where the image data is downloaded. Required.
+
+`--species_checklist`: Path to the species list obtained from 01-fetch_taxon_keys.py. Required.

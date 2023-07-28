@@ -18,6 +18,7 @@ dependencies:
   - keras
   - pre-commit
   - tqdm
+  - seaborn
   - pip:
     - pygbif
     - torchsummary

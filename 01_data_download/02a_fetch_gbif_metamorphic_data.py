@@ -17,6 +17,7 @@ import json
 import time
 import math
 import argparse
+from urllib.parse import quote  
 
 
 parser = argparse.ArgumentParser()
@@ -52,8 +53,8 @@ MAX_DATA_SP = args.max_images_per_species
 LIMIT_DOWN = 300  # GBIF API parameter for max results per page
 MAX_SEARCHES = 11000  # maximum no. of points to iterate
 moth_data = pd.read_csv(species_list)
-RESUME_SESSION = False  # args.resume_session
-
+RESUME_SESSION = args.resume_session
+print(RESUME_SESSION)
 
 # Downloading gbif data
 def inat_metadata_gbif(data):
@@ -96,14 +97,12 @@ species_name = list(
 gbif_species_name = list(
     moth_data["gbif_species_name"]
 )  # list of species name returned by gbif [can be different from above or NA]
-genus_name = list(moth_data["family_name"])  # list of family name
-family_name = list(moth_data["genus_name"])  # list of genus name
+genus_name = list(moth_data["genus_name"])  
+family_name = list(moth_data["family_name"]) 
 columns = ["taxon_key_gbif_id", "search_species_name", "gbif_species_name", "count"]
 count_list = pd.DataFrame(columns=columns, dtype=object)
 
 # if resuming the download session
-print(RESUME_SESSION)
-
 if RESUME_SESSION is True:
     count_list = pd.read_csv(write_dir + "datacount.csv")
 
@@ -111,7 +110,11 @@ for i in range(len(taxon_key)):
     if int(taxon_key[i]) in count_list["taxon_key_gbif_id"].tolist():
         print(f"Already downloaded for {species_name[i]}")
         continue
-    print("Downloading for: ", species_name[i])
+    print(
+        "Downloading for: ",
+        species_name[i],
+        "(" + str(i) + "/" + str(len(taxon_key)) + ")",
+    )
     begin = time.time()
     if taxon_key[i] == -1:  # taxa not there on GBIF
         count_list = count_list.append(
@@ -179,8 +182,16 @@ for i in range(len(taxon_key)):
                             first_media = data["results"][k]["media"][0]
 
                             if "identifier" in first_media.keys():
-                                image_url = first_media["identifier"]
-                                try:
+                                image_url = first_media["identifier"]                             
+                                
+                               
+                                try:                                    
+                                    # catch non-ascii characters in url
+                                    if not all(ord(c) < 128 for c in image_url):
+                                        image_url = quote(image_url, safe='/:?=&')
+                                        print(image_url)
+                                    
+                                    
                                     urllib.request.urlretrieve(
                                         image_url, write_loc + "/" + gbifid + ".jpg"
                                     )
@@ -194,6 +205,9 @@ for i in range(len(taxon_key)):
 
                                 # if image_url is not valid
                                 except urllib.error.HTTPError:
+                                    continue
+                                except: # catch all other exceptions
+                                    print("Unknown error occured for URL" + image_url)
                                     continue
                     if image_count >= MAX_DATA_SP:
                         break
@@ -232,3 +246,6 @@ for i in range(len(taxon_key)):
             )
 
     count_list.to_csv(write_dir + "datacount.csv", index=False)
+
+
+print("I'm finished downloading all the data! :)")
