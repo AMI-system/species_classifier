@@ -59,6 +59,11 @@ def get_gbif_key_backbone(name):
     if "rank" not in data:
         print(name + " returns no rank")
 
+
+    # if rank not a key in data
+    if "rank" not in data:
+        print(name + " returns no rank")
+
     elif data["rank"] != "SPECIES":
         print(name + " returns rank=" + data["rank"] + " instead of SPECIES")
 
