@@ -56,3 +56,20 @@ nohup python -u 02a_fetch_gbif_metamorphic_data.py \
 Explaination: The `-u` argument force the stdout and stderr streams to be unbuffered
 
 It is quite possible to have a list of hundreds or thousands of species and maybe downloading half-a-million images. The downloading process is not too fast and can take days to complete in such cases. The script does not require to be executed in one continuous session and the data can be fetched in multiple downloading parts. If the user is resuming a previous downloading session, `True` should be passed to the `--resume_session` argument and `False` for downloading from scratch.
+
+
+## 3. Update data statistics
+
+The final step is to update the statistics (image count of each species) of the downloaded data in the root folder.
+
+```
+python 03_update_data_statistics.py \
+--data_directory ../../../data/gbif_macro_data/gbif_macro/ \
+--species_checklist output_data/keys/uksi-macro_data.csv
+```
+
+The description of the arguments to the script:
+
+`--data_directory`: Path to the folder where the image data is downloaded. Required.
+
+`--species_checklist`: Path to the species list obtained from 01-fetch_taxon_keys.py. Required.

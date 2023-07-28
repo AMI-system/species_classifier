@@ -57,18 +57,7 @@ The description of the arguments to the script:
 So we will loop through each set:
 
 ```bash
-for VARIABLE in 'val' 'test' 'train'
-do
-    echo $VARIABLE
-    mkdir -p ./data/datasets/macro/$VARIABLE
-    python 03-create_webdataset.py \
-        --dataset_dir ../../../../data/gbif_macro_data/gbif_macro/ \
-        --dataset_filepath ../../../../data/gbif_macro_data//01_uk_macro_data-$VARIABLE-split.csv \
-        --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
-        --image_resize 500 \
-        --max_shard_size 100000000 \
-        --webdataset_pattern "../../../../data/gbif_macro_data/datasets/macro/$VARIABLE/$VARIABLE-500-%06d.tar"
-done
+nohup 03_create_datasets.sh &
 ```
 
 The description of the arguments to the script:
@@ -84,7 +73,7 @@ The description of the arguments to the script:
 Or you can run them all individually:
 
 ```bash
-python 03-create_webdataset.py \
+python 03_create_webdataset.py \
     --dataset_dir ../../../../data/gbif_macro_data/gbif_macro/ \
     --dataset_filepath ../../../../data/gbif_macro_data/01_uk_macro_data-train-split.csv \
     --label_filepath ../../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
