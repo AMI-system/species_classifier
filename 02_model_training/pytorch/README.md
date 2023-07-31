@@ -57,7 +57,7 @@ The description of the arguments to the script:
 So we will loop through each set:
 
 ```bash
-nohup 03_create_datasets.sh &
+nohup ./03_create_datasets.sh &
 ```
 
 The description of the arguments to the script:
@@ -112,7 +112,12 @@ This step required the use of [wandb](https://wandb.ai/site). The user needs to 
         --dataloader_num_workers 4 \
         --random_seed 42' &
     ```
-- using ```sbatch model_training.sh``` which will output to `train.out`
+- using 
+
+    ```
+    sbatch model_training.sh
+    ```
+    which will output to `train.out`
 
 
 The description of the arguments to the script:

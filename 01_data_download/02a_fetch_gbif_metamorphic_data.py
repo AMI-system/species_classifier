@@ -189,7 +189,6 @@ for i in range(len(taxon_key)):
                                     # catch non-ascii characters in url
                                     if not all(ord(c) < 128 for c in image_url):
                                         image_url = quote(image_url, safe='/:?=&')
-                                        print(image_url)
                                     
                                     
                                     urllib.request.urlretrieve(
