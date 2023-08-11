@@ -26,9 +26,9 @@ source /bask/projects/v/vjgo8416-amber/venv/kg_py_3.8/bin/activate
 
 # 5. Train the model
 python 04_train_model.py  \
-    --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000396}.tar" \
+    --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000392}.tar" \
     --val_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/val/val-500-{000000..000052}.tar" \
-    --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000079}.tar" \
+    --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000078}.tar" \
     --config_file ./configs/01_uk_macro_data_config.json \
     --dataloader_num_workers 6 \
     --random_seed 42

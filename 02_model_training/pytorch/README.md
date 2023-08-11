@@ -102,22 +102,22 @@ python 03-create_webdataset.py \
 
 This step required the use of [wandb](https://wandb.ai/site). The user needs to create an account and login to the platform. The user will then need to set up a project and pass the `entity` (username) and `project` into the config file. The user can then run either: 
 - through the script `04_train_model.py`:
-- nohup
+
+- using slurm (which will output to `train.out`):
+    ```
+    sbatch model_training.sh
+    ```
+
+- or nohup
     ```bash
     nohup sh -c 'python 04_train_model.py  \
-        --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000396}.tar" \
+        --train_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000392}.tar" \
         --val_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/val/val-500-{000000..000052}.tar" \
-        --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000079}.tar" \
+        --test_webdataset_url "../../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000078}.tar" \
         --config_file ./configs/01_uk_macro_data_config.json \
         --dataloader_num_workers 4 \
         --random_seed 42' &
     ```
-- using 
-
-    ```
-    sbatch model_training.sh
-    ```
-    which will output to `train.out`
 
 
 The description of the arguments to the script:
