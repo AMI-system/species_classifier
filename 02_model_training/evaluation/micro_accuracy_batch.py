@@ -31,7 +31,7 @@ class MicroAccuracyBatch:
         """
         _, predict_indx_1 = torch.topk(self.predictions, 1)
         _, predict_indx_3 = torch.topk(self.predictions, 3)
-        _, predict_indx_10 = torch.topk(self.predictions, 4)
+        _, predict_indx_10 = torch.topk(self.predictions, 10)
 
         # species
         correct_1 = 0

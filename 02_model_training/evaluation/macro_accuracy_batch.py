@@ -33,7 +33,7 @@ class MacroAccuracyBatch:
         """
         _, predict_indx_1 = torch.topk(self.predictions, 1)
         _, predict_indx_3 = torch.topk(self.predictions, 3)
-        _, predict_indx_10 = torch.topk(self.predictions, 4)
+        _, predict_indx_10 = torch.topk(self.predictions, 10)
 
         predict_indx_1 = np.array(predict_indx_1.cpu())
         predict_indx_3 = np.array(predict_indx_3.cpu())
