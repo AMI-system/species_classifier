@@ -33,17 +33,22 @@ def prepare_split_list(global_pd, new_list, fields):
         species = path_split[-2]
         genus = path_split[-3]
         family = path_split[-4]
-
+        
         new_data.append([filename, family, genus, species])
 
     new_data = pd.DataFrame(new_data, columns=fields, dtype=object)
-    global_pd = global_pd.append(new_data, ignore_index=True)
+    global_pd = pd.concat([global_pd, new_data], ignore_index=True)
 
     return global_pd
 
 
 def create_data_split(args):
     """main function for creating the dataset split"""
+    
+    data_list = args.species_list
+    data = pd.read_csv(data_list, keep_default_na=False)
+    species_list = list(set(data["gbif_species_name"]))
+    print(species_list)
 
     data_dir = args.data_dir  # root directory of data
     write_dir = args.write_dir  # split files to be written
@@ -66,34 +71,36 @@ def create_data_split(args):
                 if os.path.isdir(data_dir + "/" + family + "/" + genus):
 
                     for species in os.listdir(data_dir + family + "/" + genus):
-                        if os.path.isdir(
-                            data_dir + "/" + family + "/" + genus + "/" + species
-                        ):
+                        if species in species_list:
+                            print(species)
+                            if os.path.isdir(
+                                data_dir + "/" + family + "/" + genus + "/" + species
+                            ):
 
-                            file_data = glob.glob(
-                                data_dir
-                                + family
-                                + "/"
-                                + genus
-                                + "/"
-                                + species
-                                + "/*.jpg"
-                            )
-                            random.shuffle(file_data)
+                                file_data = glob.glob(
+                                    data_dir
+                                    + family
+                                    + "/"
+                                    + genus
+                                    + "/"
+                                    + species
+                                    + "/*.jpg"
+                                )
+                                random.shuffle(file_data)
 
-                            total = len(file_data)
-                            train_amt = round(total * train_spt)
-                            val_amt = round(total * val_spt)
+                                total = len(file_data)
+                                train_amt = round(total * train_spt)
+                                val_amt = round(total * val_spt)
 
-                            train_list = file_data[:train_amt]
-                            val_list = file_data[train_amt : train_amt + val_amt]
-                            test_list = file_data[train_amt + val_amt :]
+                                train_list = file_data[:train_amt]
+                                val_list = file_data[train_amt : train_amt + val_amt]
+                                test_list = file_data[train_amt + val_amt :]
 
-                            train_data = prepare_split_list(
-                                train_data, train_list, fields
-                            )
-                            val_data = prepare_split_list(val_data, val_list, fields)
-                            test_data = prepare_split_list(test_data, test_list, fields)
+                                train_data = prepare_split_list(
+                                    train_data, train_list, fields
+                                )
+                                val_data = prepare_split_list(val_data, val_list, fields)
+                                test_data = prepare_split_list(test_data, test_list, fields)
 
     # saving the lists to disk
     train_data.to_csv(write_dir + args.filename + "-train-split.csv", index=False)
@@ -117,6 +124,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--write_dir",
         help="path to the directory for saving the split files",
+        required=True,
+    )
+    parser.add_argument(
+        "--species_list",
+        help="path to the species list",
         required=True,
     )
     parser.add_argument(
