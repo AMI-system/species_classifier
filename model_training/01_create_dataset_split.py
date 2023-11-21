@@ -48,7 +48,6 @@ def create_data_split(args):
     data_list = args.species_list
     data = pd.read_csv(data_list, keep_default_na=False)
     species_list = list(set(data["gbif_species_name"]))
-    print(species_list)
 
     data_dir = args.data_dir  # root directory of data
     write_dir = args.write_dir  # split files to be written
@@ -72,7 +71,6 @@ def create_data_split(args):
 
                     for species in os.listdir(data_dir + family + "/" + genus):
                         if species in species_list:
-                            print(species)
                             if os.path.isdir(
                                 data_dir + "/" + family + "/" + genus + "/" + species
                             ):
