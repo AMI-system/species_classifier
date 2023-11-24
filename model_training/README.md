@@ -10,10 +10,11 @@ This creates training, validation and testing splits of the data downloaded from
 python 01_create_dataset_split.py \
     --data_dir ../../../../data/gbif_macro_data/gbif_macro/ \
     --write_dir ../../../../data/gbif_macro_data/ \
+    --species_list ../../../gbif_download_standalone/species_checklists/singapore-moths-keys-nodup.csv \
     --train_ratio 0.75 \
     --val_ratio 0.10 \
     --test_ratio 0.15 \
-    --filename 01_uk_macro_data
+    --filename 01_singapore_macro_data
 ```
 
 The description of the arguments to the script:
@@ -23,6 +24,7 @@ The description of the arguments to the script:
 * `--val_ratio`: Proportion of data for validation. **Required**.
 * `--test_ratio`: Proportion of data for testing. **Required**.
 * `--filename`: Initial name for the split files. **Required**.
+* `--species_list`: Path to the species list. **Required**.
 
 <br>
 
@@ -103,11 +105,15 @@ python 03-create_webdataset.py \
 This step required the use of [wandb](https://wandb.ai/site). The user needs to create an account and login to the platform. The user will then need to set up a project and pass the `entity` (username) and `project` into the config file. The user can then run either: 
 - through the script `04_train_model.py`:
 
-- using slurm (which will output to `train.out`):
+- using slurm (which will output to `train.out`) you can run:
     ```
-    sbatch model_training.sh
+    sbatch uk_model.sh
+    sbatch singapore_model.sh
+    sbatch costarica_model.sh
     ```
-
+    
+    for each region, respectively.
+    
 - or nohup
     ```bash
     nohup sh -c 'python 04_train_model.py  \
