@@ -44,6 +44,8 @@ conda activate ~/amber/kg_conda_env2
 #     --training_points_filename 01_singapore_data_count_training_points \
 #     --train_split_file /bask/homes/f/fspo1218/amber/data/gbif_singapore/01_singapore_data-train-split.csv
 
+# printf '\nmake sure you update ./configs/01_singapore_data_config.json with these values!\n\n'
+
 # 3. create webdataset
 # for VARIABLE in 'train' 'val' 'test'
 # do
@@ -58,7 +60,6 @@ conda activate ~/amber/kg_conda_env2
 #         --webdataset_pattern "/bask/homes/f/fspo1218/amber/data/gbif_singapore/$VARIABLE/$VARIABLE-500-%06d.tar"
 # done
 
-# make sure you update ./configs/01_sinapore_data_config.json
 
 # 4. Train the model
 echo 'Training the model'

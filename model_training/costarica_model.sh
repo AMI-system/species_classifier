@@ -40,6 +40,8 @@ python 01_create_dataset_split.py \
 #     --training_points_filename 01_costarica_data_count_training_points \
 #     --train_split_file /bask/homes/f/fspo1218/amber/data/gbif_costarica/01_costarica_data-train-split.csv
 
+# printf '\nmake sure you update ./configs/01_costarica_data_config.json with these values!\n\n'
+
 # 3. create webdataset
 # for VARIABLE in 'train' 'val' 'test'
 # do
