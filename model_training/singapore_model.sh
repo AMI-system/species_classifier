@@ -58,6 +58,7 @@ conda activate ~/amber/kg_conda_env2
 #         --webdataset_pattern "/bask/homes/f/fspo1218/amber/data/gbif_singapore/$VARIABLE/$VARIABLE-500-%06d.tar"
 # done
 
+# make sure you update ./configs/01_sinapore_data_config.json
 
 # 4. Train the model
 echo 'Training the model'
