@@ -36,29 +36,29 @@ conda activate ~/amber/kg_conda_env2
 
 
 # 1. create_dataset_split
-echo 'Create dataset split'
-python 01_create_dataset_split.py \
-    --data_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
-    --write_dir /bask/homes/f/fspo1218/amber/data/gbif_uk/ \
-    --species_list /bask/homes/f/fspo1218/amber/projects/gbif_download_standalone/species_checklists/uksi-moths-keys-nodup.csv \
-    --train_ratio 0.75 \
-    --val_ratio 0.10 \
-    --test_ratio 0.15 \
-    --filename 01_uk_data
+# echo 'Create dataset split'
+# python 01_create_dataset_split.py \
+#     --data_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
+#     --write_dir /bask/homes/f/fspo1218/amber/data/gbif_uk/ \
+#     --species_list /bask/homes/f/fspo1218/amber/projects/gbif_download_standalone/species_checklists/uksi-moths-keys-nodup.csv \
+#     --train_ratio 0.75 \
+#     --val_ratio 0.10 \
+#     --test_ratio 0.15 \
+#     --filename 01_uk_data
 
-# 2. calculate_taxa_statistics
-python 02_calculate_taxa_statistics.py \
-    --species_list /bask/homes/f/fspo1218/amber/projects/gbif_download_standalone/species_checklists/uksi-moths-keys-nodup.csv \
-    --write_dir /bask/homes/f/fspo1218/amber/data/gbif_uk/ \
-    --numeric_labels_filename 01_uk_data_numeric_labels \
-    --taxon_hierarchy_filename 01_uk_data_taxon_hierarchy \
-    --training_points_filename 01_uk_data_count_training_points \
-    --train_split_file /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data-train-split.csv
+# # 2. calculate_taxa_statistics
+# python 02_calculate_taxa_statistics.py \
+#     --species_list /bask/homes/f/fspo1218/amber/projects/gbif_download_standalone/species_checklists/uksi-moths-keys-nodup.csv \
+#     --write_dir /bask/homes/f/fspo1218/amber/data/gbif_uk/ \
+#     --numeric_labels_filename 01_uk_data_numeric_labels \
+#     --taxon_hierarchy_filename 01_uk_data_taxon_hierarchy \
+#     --training_points_filename 01_uk_data_count_training_points \
+#     --train_split_file /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data-train-split.csv
 
-printf '\nmake sure you update ./configs/01_uk_data_config.json with these values!\n\n'
+# printf '\nmake sure you update ./configs/01_uk_data_config.json with these values!\n\n'
 
 # 3. create webdataset
-for VARIABLE in 'train' 'val' 'test'
+for VARIABLE in 'val' 'test'
 do
     echo '--' $VARIABLE
     mkdir -p /bask/homes/f/fspo1218/amber/data/gbif_uk/$VARIABLE
