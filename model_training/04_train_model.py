@@ -356,7 +356,7 @@ def train_model(args):
         }
     )
     confdata_pd = pd.concat([confdata_pd_f, confdata_pd_g, confdata_pd_sp], axis=1)
-    confdata_pd.to_csv(mod_save_pth + mod_ver + "_confusion-data.csv", index=False)
+    confdata_pd.to_csv(mod_save_pth + mod_name + "_" + mod_ver + "_confusion-data.csv", index=False)
 
     with open(
         mod_save_pth + mod_name + "_" + mod_ver + "_micro-accuracy.json", "w"
