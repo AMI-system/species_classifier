@@ -75,11 +75,30 @@ done
 
 
 # 4. Train the model
+generate_file_range() {
+    local directory="/bask/homes/f/fspo1218/amber/data/gbif_uk"
+    local prefix="$1"  
+
+    # Count the number of files matching the specified prefix in the directory
+    local file_count=$(ls -1 "$directory"/"$prefix"/"$prefix"-500* 2>/dev/null | wc -l)
+    ((file_count--))
+    
+    file_count=$(printf "%06d" "$file_count")
+    formatted_url="$directory/$prefix/$prefix-500-{000000..$file_count}.tar"
+
+    echo $formatted_url
+}
+
+# Example usage:
+train_url=$(generate_file_range "train")
+test_url=$(generate_file_range "test")
+val_url=$(generate_file_range "val")
+
 # echo 'Training the model'
 # python 04_train_model.py  \
-#     --train_webdataset_url "/bask/homes/f/fspo1218/amber/data/gbif_uk/train/train-500-{000000..000160}.tar" \
-#     --val_webdataset_url "/bask/homes/f/fspo1218/amber/data/gbif_uk/val/val-500-{000000..000021}.tar" \
-#     --test_webdataset_url "/bask/homes/f/fspo1218/amber/data/gbif_uk/test/test-500-{000000..000031}.tar" \
+#     --train_webdataset_url "$train_url" \
+#     --val_webdataset_url "$val_url" \
+#     --test_webdataset_url "$test_url" \
 #     --config_file ./configs/01_uk_data_config.json \
 #     --dataloader_num_workers 6 \
 #     --random_seed 42
