@@ -1,20 +1,30 @@
-# Pytorch Model Training
+# Species Classifies Models
+
+This repo creates PyTorch species classification models based on GBIF images (see the [gbif_download_standalone](https://github.com/AMI-trap/gbif_download_standalone) repo for information and code to downloading images).  
 
 This model is built using pytorch. The user needs to run the following scripts in a sequence to train the model:
 
-## 1. `01-create_dataset_split.py`
+
+## AMBER regions
+
+To run this for a given species list on [Baskerville](https://docs.baskerville.ac.uk/) you can use the `{region}_model.sh` files. 
+For example `sbatch costarica_model.sh`
+
+## Pipeline
+
+### 1. `01-create_dataset_split.py`
 
 This creates training, validation and testing splits of the data downloaded from GBIF.
 
 ```bash
 python 01_create_dataset_split.py \
-    --data_dir ../../../data/gbif_macro_data/gbif_macro/ \
-    --write_dir ../../../data/gbif_macro_data/ \
-    --species_list ../../gbif_download_standalone/species_checklists/singapore-moths-keys-nodup.csv \
+    --data_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
+    --write_dir /bask/homes/f/fspo1218/amber/data/gbif_costarica/ \
+    --species_list /bask/homes/f/fspo1218/amber/projects/gbif_download_standalone/species_checklists/costarica-moths-keys-nodup.csv \
     --train_ratio 0.75 \
     --val_ratio 0.10 \
     --test_ratio 0.15 \
-    --filename 01_singapore_macro_data
+    --filename 01_costarica_data
 ```
 
 The description of the arguments to the script:
@@ -28,18 +38,18 @@ The description of the arguments to the script:
 
 <br>
 
-## 2. `02-calculate_taxa_statistics.py`
+### 2. `02-calculate_taxa_statistics.py`
 
 This calculates information and statistics regarding the taxonomy to be used for model training.
 
 ```bash
 python 02_calculate_taxa_statistics.py \
-    --species_list ../01_data_download/output_data/keys/uksi-macro_data.csv \
-    --write_dir ../../../data/gbif_macro_data/ \
-    --numeric_labels_filename 01_uk_macro_data_numeric_labels \
-    --taxon_hierarchy_filename 01_uk_macro_data_taxon_hierarchy \
-    --training_points_filename 01_uk_macro_data_count_training_points \
-    --train_split_file ../../../data/gbif_macro_data/01_uk_macro_data-train-split.csv
+    --species_list /bask/homes/f/fspo1218/amber/projects/gbif_download_standalone/species_checklists/costarica-moths-keys-nodup.csv \
+    --write_dir /bask/homes/f/fspo1218/amber/data/gbif_costarica/ \
+    --numeric_labels_filename 01_costarica_data_numeric_labels \
+    --taxon_hierarchy_filename 01_costarica_data_taxon_hierarchy \
+    --training_points_filename 01_costarica_data_count_training_points \
+    --train_split_file /bask/homes/f/fspo1218/amber/data/gbif_costarica/01_costarica_data-train-split.csv
 ```
 
 The description of the arguments to the script:
@@ -54,53 +64,26 @@ The description of the arguments to the script:
 
 <br>
 
-## 3. `03_create_webdataset.py`: Creates webdataset from raw image data. It needs to be run individually for each of the train, validation and test sets.
+### 3. `03_create_webdataset.py`: Creates webdataset from raw image data. It needs to be run individually for each of the train, validation and test sets.
 
 So we will loop through each set:
 
 ```bash
-nohup ./03_create_datasets.sh &
+for VARIABLE in 'train' 'val' 'test'
+do
+    echo '--' $VARIABLE
+    mkdir -p /bask/homes/f/fspo1218/amber/data/gbif_costarica/$VARIABLE
+    python 03_create_webdataset.py \
+        --dataset_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
+        --dataset_filepath /bask/homes/f/fspo1218/amber/data/gbif_costarica/01_costarica_data-$VARIABLE-split.csv \
+        --label_filepath /bask/homes/f/fspo1218/amber/data/gbif_costarica/01_costarica_data_numeric_labels.json \
+        --image_resize 500 \
+        --max_shard_size 100000000 \
+        --webdataset_pattern "/bask/homes/f/fspo1218/amber/data/gbif_costarica/$VARIABLE/$VARIABLE-500-%06d.tar"
+done
 ```
 
-The description of the arguments to the script:
-* `--dataset_dir`: Path to the dataset directory containing the gbif data. **Required**.
-* `--dataset_filepath`: Path to the csv file containing every data point information. **Required**.
-* `--label_filepath`: File path containing numerical label information. **Required**.
-* `--image_resize`: Resizing image factor (size x size) **Required**.
-* `--webdataset_patern`: Path and format type to save the webdataset. It needs to be passed in double quotes. **Required**.
-* `--max_shard_size`: The maximum shard size in bytes. Optional. **Default** is **10^8 (100 MB)**.
-* `--random_seed`: Random seed for reproducible experiments. Optional. **Default** is **42**.
-
-
-Or you can run them all individually:
-
-```bash
-python 03_create_webdataset.py \
-    --dataset_dir ../../../data/gbif_macro_data/gbif_macro/ \
-    --dataset_filepath ../../../data/gbif_macro_data/01_uk_macro_data-train-split.csv \
-    --label_filepath ../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
-    --image_resize 500 \
-    --max_shard_size 100000000 \
-    --webdataset_pattern "../../../data/gbif_macro_data/datasets/macro/train/train-500-%06d.tar"
-
-python 03-create_webdataset.py \
-    --dataset_dir ../../../data/gbif_macro_data/gbif_macro/ \
-    --dataset_filepath ../../../data/gbif_macro_data/01_uk_macro_data-test-split.csv \
-    --label_filepath ../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
-    --image_resize 500 \
-    --max_shard_size 100000000 \
-    --webdataset_pattern "../../../data/gbif_macro_data/datasets/macro/test/test-500-%06d.tar"
-
-python 03-create_webdataset.py \
-    --dataset_dir ../../../data/gbif_macro_data/gbif_macro/ \
-    --dataset_filepath ../../../data/gbif_macro_data/01_uk_macro_data-val-split.csv \
-    --label_filepath ../../../data/gbif_macro_data/01_uk_macro_data_numeric_labels.json \
-    --image_resize 500 \
-    --max_shard_size 100000000 \
-    --webdataset_pattern "../../../data/gbif_macro_data/datasets/macro/val/val-500-%06d.tar"
-```
-
-## 4. Training the Pytorch model
+### 4. Training the Pytorch model
 
 This step required the use of [wandb](https://wandb.ai/site). The user needs to create an account and login to the platform. The user will then need to set up a project and pass the `entity` (username) and `project` into the config file. The user can then run either: 
 - through the script `04_train_model.py`:
@@ -117,12 +100,12 @@ This step required the use of [wandb](https://wandb.ai/site). The user needs to 
 - or nohup
     ```bash
     nohup sh -c 'python 04_train_model.py  \
-        --train_webdataset_url "../../../data/gbif_macro_data/datasets/macro/train/train-500-{000000..000392}.tar" \
-        --val_webdataset_url "../../../data/gbif_macro_data/datasets/macro/val/val-500-{000000..000052}.tar" \
-        --test_webdataset_url "../../../data/gbif_macro_data/datasets/macro/test/test-500-{000000..000078}.tar" \
-        --config_file ./configs/01_uk_macro_data_config.json \
-        --dataloader_num_workers 4 \
-        --random_seed 42' &
+    --train_webdataset_url "$train_url" \
+    --val_webdataset_url "$val_url" \
+    --test_webdataset_url "$test_url" \
+    --config_file ./configs/01_costarica_data_config.json \
+    --dataloader_num_workers 6 \
+    --random_seed 42' &
     ```
 
 
@@ -137,4 +120,4 @@ The description of the arguments to the script:
 
 *For setting up the config file* The total families, genuses, and species are spit out at the end of `02_calculate_taxa_statistics.py` so you can use this info to fill in the config lines 5-7.
 
-Or using the jupyter notebook `pytorch_model.ipynb`. This is mostly for debugging purposes
+

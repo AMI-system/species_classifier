@@ -3,7 +3,7 @@
 #SBATCH --cpus-per-task=6      
 #SBATCH --gres=gpu:1
 #SBATCH --mem=150G
-#SBATCH --output=train.out
+#SBATCH --output=singapore_train.out
 #SBATCH --time=10:00:00          # total run time limit (DD-HH:MM:SS)
 
 # 0. Set up
@@ -12,7 +12,6 @@
 module purge; module load baskerville
 module load bask-apps/live
 module load CUDA/11.7.0
-#module load Python/3.8.6-GCCcore-10.2.0
 module load Python/3.9.5-GCCcore-10.3.0
 module load Miniconda3/4.10.3
 eval "$(${EBROOTMINICONDA3}/bin/conda shell.bash hook)"

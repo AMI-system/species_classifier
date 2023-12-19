@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=150G
 #SBATCH --output=train.out
-#SBATCH --time=10:00:00          # total run time limit (DD-HH:MM:SS)
+#SBATCH --time=30:00:00          # total run time limit (DD-HH:MM:SS)
 
 # 0. Set up
 
@@ -58,18 +58,18 @@ conda activate ~/amber/kg_conda_env2
 # printf '\nmake sure you update ./configs/01_uk_data_config.json with these values!\n\n'
 
 # 3. create webdataset
-for VARIABLE in 'val' 'test'
-do
-    echo '--' $VARIABLE
-    mkdir -p /bask/homes/f/fspo1218/amber/data/gbif_uk/$VARIABLE
-    python 03_create_webdataset.py \
-        --dataset_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
-        --dataset_filepath /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data-$VARIABLE-split.csv \
-        --label_filepath /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data_numeric_labels.json \
-        --image_resize 500 \
-        --max_shard_size 100000000 \
-        --webdataset_pattern "/bask/homes/f/fspo1218/amber/data/gbif_uk/$VARIABLE/$VARIABLE-500-%06d.tar"
-done
+# for VARIABLE in 'train'
+# do
+#     echo '--' $VARIABLE
+#     mkdir -p /bask/homes/f/fspo1218/amber/data/gbif_uk/$VARIABLE
+#     python 03_create_webdataset.py \
+#         --dataset_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
+#         --dataset_filepath /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data-$VARIABLE-split.csv \
+#         --label_filepath /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data_numeric_labels.json \
+#         --image_resize 500 \
+#         --max_shard_size 100000000 \
+#         --webdataset_pattern "/bask/homes/f/fspo1218/amber/data/gbif_uk/$VARIABLE/$VARIABLE-500-%06d.tar"
+# done
 
 
 
@@ -94,14 +94,14 @@ train_url=$(generate_file_range "train")
 test_url=$(generate_file_range "test")
 val_url=$(generate_file_range "val")
 
-# echo 'Training the model'
-# python 04_train_model.py  \
-#     --train_webdataset_url "$train_url" \
-#     --val_webdataset_url "$val_url" \
-#     --test_webdataset_url "$test_url" \
-#     --config_file ./configs/01_uk_data_config.json \
-#     --dataloader_num_workers 6 \
-#     --random_seed 42
+echo 'Training the model'
+python 04_train_model.py  \
+    --train_webdataset_url "$train_url" \
+    --val_webdataset_url "$val_url" \
+    --test_webdataset_url "$test_url" \
+    --config_file ./configs/01_uk_data_config.json \
+    --dataloader_num_workers 6 \
+    --random_seed 42
 
 
 # ding ding
