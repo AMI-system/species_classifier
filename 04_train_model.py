@@ -227,6 +227,14 @@ def train_model(args):
                     model,
                     save_path,
                 )
+                torch.save(
+                    {
+                        "epoch": epoch,
+                        "model_state_dict": model.state_dict(),
+                        "optimizer_state_dict": optimizer.state_dict(),
+                    },
+                    save_path.replace(".pt", "_state.pt"),
+                )
             else:
                 torch.save(
                     # {
@@ -238,6 +246,15 @@ def train_model(args):
                     # },
                     model,
                     save_path,
+                )
+                
+                torch.save(
+                    {
+                        "epoch": epoch,
+                        "model_state_dict": model.state_dict(),
+                        "optimizer_state_dict": optimizer.state_dict(),
+                    },
+                    save_path.replace(".pt", "_state.pt"),
                 )
 
             lowest_val_loss = val_loss

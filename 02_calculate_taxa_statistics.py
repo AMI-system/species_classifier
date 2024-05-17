@@ -53,6 +53,16 @@ def convert_to_numeric_labels(args):
 
     with open(write_dir + args.numeric_labels_filename + ".json", "w") as outfile:
         json.dump(list_data, outfile, indent=4)
+        
+    # building the reverse category map (for data companion)
+    categories_map = {}
+    species_list = list_data["species_list"]
+
+    for i in range(len(species_list)):
+        categories_map[species_list[i]] = i
+
+    with open(write_dir + args.category_map_filename + ".json", "w") as outfile:
+        json.dump(categories_map, outfile)
 
 
 def taxon_hierarchy(args):
@@ -121,6 +131,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--numeric_labels_filename",
         help="filename for numeric labels file",
+        required=True,
+    )
+    parser.add_argument(
+        "--category_map_filename",
+        help="filename for the category map from integers to species names",
         required=True,
     )
     parser.add_argument(

@@ -44,28 +44,29 @@ conda activate ~/amber/kg_conda_env2
 #     --train_ratio 0.75 \
 #     --val_ratio 0.10 \
 #     --test_ratio 0.15 \
-#     --filename 01_uk_data
+#     --filename 03_uk_data
 
-# # 2. calculate_taxa_statistics
+# 2. calculate_taxa_statistics
 # python 02_calculate_taxa_statistics.py \
 #     --species_list /bask/homes/f/fspo1218/amber/projects/gbif_download_standalone/species_checklists/uksi-moths-keys-nodup.csv \
 #     --write_dir /bask/homes/f/fspo1218/amber/data/gbif_uk/ \
-#     --numeric_labels_filename 01_uk_data_numeric_labels \
-#     --taxon_hierarchy_filename 01_uk_data_taxon_hierarchy \
-#     --training_points_filename 01_uk_data_count_training_points \
-#     --train_split_file /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data-train-split.csv
+#     --numeric_labels_filename 03_uk_data_numeric_labels \
+#     --taxon_hierarchy_filename 03_uk_data_taxon_hierarchy \
+#     --category_map_filename 03_uk_data_category_map \
+#     --training_points_filename 03_uk_data_count_training_points \
+#     --train_split_file /bask/homes/f/fspo1218/amber/data/gbif_uk/03_uk_data-train-split.csv
 
-# printf '\nmake sure you update ./configs/01_uk_data_config.json with these values!\n\n'
+# printf '\nmake sure you update ./configs/03_uk_data_config.json with these values!\n\n'
 
-# 3. create webdataset
-# for VARIABLE in 'train'
+# # 3. create webdataset
+# for VARIABLE in 'test' 'val' #'train'
 # do
 #     echo '--' $VARIABLE
 #     mkdir -p /bask/homes/f/fspo1218/amber/data/gbif_uk/$VARIABLE
 #     python 03_create_webdataset.py \
 #         --dataset_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
-#         --dataset_filepath /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data-$VARIABLE-split.csv \
-#         --label_filepath /bask/homes/f/fspo1218/amber/data/gbif_uk/01_uk_data_numeric_labels.json \
+#         --dataset_filepath /bask/homes/f/fspo1218/amber/data/gbif_uk/03_uk_data-$VARIABLE-split.csv \
+#         --label_filepath /bask/homes/f/fspo1218/amber/data/gbif_uk/03_uk_data_numeric_labels.json \
 #         --image_resize 500 \
 #         --max_shard_size 100000000 \
 #         --webdataset_pattern "/bask/homes/f/fspo1218/amber/data/gbif_uk/$VARIABLE/$VARIABLE-500-%06d.tar"
@@ -99,7 +100,7 @@ python 04_train_model.py  \
     --train_webdataset_url "$train_url" \
     --val_webdataset_url "$val_url" \
     --test_webdataset_url "$test_url" \
-    --config_file ./configs/01_uk_data_config.json \
+    --config_file ./configs/03_uk_data_config.json \
     --dataloader_num_workers 6 \
     --random_seed 42
 
