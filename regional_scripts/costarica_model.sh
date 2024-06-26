@@ -19,7 +19,6 @@ eval "$(${EBROOTMINICONDA3}/bin/conda shell.bash hook)"
 
 conda activate ~/amber/kg_conda_env2
 
-
 # # 1. create_dataset_split
 # echo 'Create dataset split'
 # python 01_create_dataset_split.py \
@@ -42,7 +41,7 @@ conda activate ~/amber/kg_conda_env2
 #     --train_split_file /bask/homes/f/fspo1218/amber/data/gbif_costarica/03_costarica_data-train-split.csv
 # printf '\nmake sure you update ./configs/03_costarica_data_config.json with these values!\n\n'
 
-# 3. create webdataset
+# # 3. create webdataset
 # for VARIABLE in 'train' 'val' 'test'
 # do
 #     echo '--' $VARIABLE

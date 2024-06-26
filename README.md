@@ -7,10 +7,10 @@ This model is built using pytorch. The user needs to run the following scripts i
 
 ## Training the Models for a Given Region
 
-The easiest way to run this pipeline is to use the `{region}_model.sh` files. 
+The easiest way to run this pipeline is to use the `regional_scripst/{region}_model.sh` files. 
 
 
-To run this for a given species list with Slurm (e.g., on [Baskerville](https://docs.baskerville.ac.uk/)). For example `sbatch costarica_model.sh`, which will output to `cr_train.out`.
+To run this for a given species list with Slurm (e.g., on [Baskerville](https://docs.baskerville.ac.uk/)). For example `sbatch regional_scripst/costarica_model.sh`, which will output to `./regional_scripst/cr_train.out`.
 
 ### Scripts
 
