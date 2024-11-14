@@ -9,6 +9,7 @@ from tqdm import tqdm
 import time
 import argparse
 import random
+import csv
 
 
 from models.build_model import build_model
@@ -152,6 +153,13 @@ def train_model(args):
     # Model Training
     lowest_val_loss = start_val_los
     early_stp_count = 0
+    
+    with open(mod_save_pth + mod_name + "_" + mod_ver + "_epoch_accuracy.csv", "w") as fp:
+            wr = csv.writer(fp, dialect='excel')
+            wr.writerow(["train_micro_species_top1", "train_micro_genus_top1", "train_micro_family_top1",
+                         "val_micro_species_top1", "val_micro_genus_top1", "val_micro_family_top1",
+                         "epoch"
+            ])
 
     for epoch in tqdm(range(epochs)): #range(0, 2)):
         train_loss = 0
@@ -269,8 +277,7 @@ def train_model(args):
 
         final_micro_accuracy_train = final_microacc(global_microacc_data_train)
         final_micro_accuracy_val = final_microacc(global_microacc_data_val)
-        wandb.log(
-            {
+        epoch_log = {
                 "train_micro_species_top1": final_micro_accuracy_train[
                     "micro_species_top1"
                 ],
@@ -287,8 +294,16 @@ def train_model(args):
                 "val_micro_family_top1": final_micro_accuracy_val["micro_family_top1"],
                 "epoch": epoch,
             }
-        )
 
+        
+        wandb.log(epoch_log)
+        
+        # append to csv         
+        with open(mod_save_pth + mod_name + "_" + mod_ver + "_epoch_accuracy.csv", "a") as fp:
+            wr = csv.writer(fp, dialect='excel')
+            wr.writerow(list(epoch_log.values()))
+        
+        
         e_time = (time.time() - s_time) / 60  # time taken in minutes
         wandb.log({"time per epoch": e_time, "epoch": epoch})
 
