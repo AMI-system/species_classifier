@@ -1,20 +1,30 @@
 # Species Classifier Models
 
-This repo creates PyTorch species classification models based on GBIF images (see the [gbif_download_standalone](https://github.com/AMI-system/gbif_download_standalone) repo for information and code to downloading images).  
+This repo creates PyTorch species classification models based on GBIF images (see the [gbif_download_standalone](https://github.com/AMI-system/gbif_download_standalone) repo for information and code to downloading images).
 
 This model is built using pytorch. The user needs to run the following scripts in a sequence to train the model:
 
 
 ## Training the Models for a Given Region
 
-The easiest way to run this pipeline is to use the `regional_scripst/{region}_model.sh` files. 
+The easiest way to run this pipeline is to use the `regional_scripts/{region}_model.sh` files.
 
 
 To run this for a given species list with Slurm (e.g., on [Baskerville](https://docs.baskerville.ac.uk/) or [JASMIN](https://jasmin.ac.uk/)). For example `sbatch regional_scripts/costarica_model.sh`, which will output to `cr_train.out`.
 
+### Enviornment
+
+To load/create the conda environment:
+
+```
+source ~/miniforge3/bin/activate
+conda create -p ~/conda_envs/species_classifier --file environment.yml
+```
+
+
 ### Scripts
 
-The pipeline is comprised of 4 scripts: 
+The pipeline is comprised of 4 scripts:
 
 #### **`01-create_dataset_split.py`**
 
