@@ -14,8 +14,6 @@ dependencies:
   - scikit-learn
   - pandas
   - keras
-  - pandas
-  - keras
   - pre-commit
   - tqdm
   - seaborn
