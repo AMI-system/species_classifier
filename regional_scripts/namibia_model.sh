@@ -9,44 +9,44 @@
 
 # Module loading
 source ~/miniforge3/bin/activate
-conda activate "~/conda_envs/species_classifier/"
+conda activate species_classifier2
 
 # # 1. create_dataset_split
-echo 'Create dataset split'
-python 01_create_dataset_split.py \
-    --data_dir /gws/nopw/j04/ceh_generic/kgoldmann/gbif_images/ \
-    --write_dir /gws/nopw/j04/ceh_generic/kgoldmann/classifier_data/gbif_namibia/ \
-    --species_list /home/users/katriona/gbif_download_standalone/species_checklists/namibia-moths-keys-nodup.csv \
-    --train_ratio 0.75 \
-    --val_ratio 0.10 \
-    --test_ratio 0.15 \
-    --filename 01_namibia_data
+# echo 'Create dataset split'
+# python 01_create_dataset_split.py \
+#     --data_dir /gws/nopw/j04/ceh_generic/kgoldmann/gbif_images/ \
+#     --write_dir /gws/nopw/j04/ceh_generic/kgoldmann/classifier_data/gbif_namibia/ \
+#     --species_list /home/users/katriona/gbif_download_standalone/species_checklists/namibia-moths-keys-nodup.csv \
+#     --train_ratio 0.75 \
+#     --val_ratio 0.10 \
+#     --test_ratio 0.15 \
+#     --filename 01_namibia_data
 
 # # 2. calculate_taxa_statistics
-python 02_calculate_taxa_statistics.py \
-    --species_list /home/users/katriona/gbif_download_standalone/species_checklists/namibia-moths-keys-nodup.csv \
-    --write_dir /gws/nopw/j04/ceh_generic/kgoldmann/classifier_data/gbif_namibia/ \
-    --numeric_labels_filename 01_namibia_data_numeric_labels \
-    --taxon_hierarchy_filename 01_namibia_data_taxon_hierarchy \
-    --category_map_filename 01_namibia_data_category_map \
-    --training_points_filename 01_namibia_data_count_training_points \
-    --train_split_file /gws/nopw/j04/ceh_generic/kgoldmann/classifier_data/gbif_namibia/01_namibia_data-train-split.csv
+# python 02_calculate_taxa_statistics.py \
+#     --species_list /home/users/katriona/gbif_download_standalone/species_checklists/namibia-moths-keys-nodup.csv \
+#     --write_dir /gws/nopw/j04/ceh_generic/kgoldmann/classifier_data/gbif_namibia/ \
+#     --numeric_labels_filename 01_namibia_data_numeric_labels \
+#     --taxon_hierarchy_filename 01_namibia_data_taxon_hierarchy \
+#     --category_map_filename 01_namibia_data_category_map \
+#     --training_points_filename 01_namibia_data_count_training_points \
+#     --train_split_file /gws/nopw/j04/ceh_generic/kgoldmann/classifier_data/gbif_namibia/01_namibia_data-train-split.csv
 
-printf '\nmake sure you update ./configs/01_namibia_data_config.json with these values!\n\n'
+# printf '\nmake sure you update ./configs/01_namibia_data_config.json with these values!\n\n'
 
-# # # 3. create webdataset
-# for VARIABLE in 'train' 'val' 'test'
-# do
-#     echo '--' $VARIABLE
-#     mkdir -p /bask/homes/f/fspo1218/amber/data/gbif_namibia/$VARIABLE
-#     python 01_create_webdataset.py \
-#         --dataset_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
-#         --dataset_filepath /bask/homes/f/fspo1218/amber/data/gbif_namibia/01_namibia_data-$VARIABLE-split.csv \
-#         --label_filepath /bask/homes/f/fspo1218/amber/data/gbif_namibia/01_namibia_data_numeric_labels.json \
-#         --image_resize 500 \
-#         --max_shard_size 100000000 \
-#         --webdataset_pattern "/bask/homes/f/fspo1218/amber/data/gbif_namibia/$VARIABLE/$VARIABLE-500-%06d.tar"
-# done
+# # 3. create webdataset
+for VARIABLE in 'train' 'val' 'test'
+do
+    echo '--' $VARIABLE
+    mkdir -p /bask/homes/f/fspo1218/amber/data/gbif_namibia/$VARIABLE
+    python 03_create_webdataset.py \
+        --dataset_dir /bask/homes/f/fspo1218/amber/data/gbif_download_standalone/gbif_images/ \
+        --dataset_filepath /bask/homes/f/fspo1218/amber/data/gbif_namibia/01_namibia_data-$VARIABLE-split.csv \
+        --label_filepath /bask/homes/f/fspo1218/amber/data/gbif_namibia/01_namibia_data_numeric_labels.json \
+        --image_resize 500 \
+        --max_shard_size 100000000 \
+        --webdataset_pattern "/bask/homes/f/fspo1218/amber/data/gbif_namibia/$VARIABLE/$VARIABLE-500-%06d.tar"
+done
 
 
 

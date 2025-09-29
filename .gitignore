@@ -15,7 +15,7 @@
 *.cfg
 *.pickle
 *.tflite
-*.json
+
 
 # ignore pytorch models
 *.snapshot
