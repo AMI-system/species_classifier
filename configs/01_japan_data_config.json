@@ -2,16 +2,16 @@
 	"note": "This config file is for training on the complete moths dataset",
 
 	"model":{
-		"species_num_classes": 759,
-		"genus_num_classes": 449,
-		"family_num_classes": 43,
+		"species_num_classes": 6040,
+		"genus_num_classes": 2045,
+		"family_num_classes": 84,
 		"type": "resnet50",
 		"preprocess_mode": "tf"
 	},
 
 	"dataset":{
-		"label_info": "/gws/ssde/j25b/ceh_generic/kgoldmann/classifier_data/gbif_namibia/01_namibia_data_numeric_labels.json",
-		"taxon_hierarchy": "/gws/ssde/j25b/ceh_generic/kgoldmann/classifier_data/gbif_namibia/01_namibia_data_taxon_hierarchy.json"
+		"label_info": "/gws/ssde/j25b/ceh_generic/kgoldmann/classifier_data/gbif_japan/01_japan_data_numeric_labels.json",
+		"taxon_hierarchy": "/gws/ssde/j25b/ceh_generic/kgoldmann/classifier_data/gbif_japan/01_japan_data_taxon_hierarchy.json"
 	},
 
 	"training":{
@@ -33,7 +33,7 @@
 				"project": "gbif"
 				},
 		"model_save_path": "/home/users/katriona/species_classifier/outputs/",
-		"model_name": "turing-namibia",
-		"version": "v01"
+		"model_name": "turing-japan",
+		"version": "v02"
 	}
 }
