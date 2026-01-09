@@ -48,9 +48,9 @@ def train_model(args):
     wandb.init(
         project=config_data["training"]["wandb"]["project"],
         entity=config_data["training"]["wandb"]["entity"],
-        tags="pytorch"
+        tags="pytorch",
+        settings=wandb.Settings(start_method="fork")
     )
-    wandb.init(settings=wandb.Settings(start_method="fork"))
 
     image_resize = config_data["training"]["image_resize"]
     batch_size = config_data["training"]["batch_size"]
@@ -88,7 +88,7 @@ def train_model(args):
     taxon_hierar = config_data["dataset"]["taxon_hierarchy"]
     label_info = config_data["dataset"]["label_info"]
 
-    if (torch.cuda.is_available()): 
+    if (torch.cuda.is_available()):
         device = "cuda"
     else:
         device = "cpu"
@@ -98,13 +98,17 @@ def train_model(args):
     #     torch.backends.mps.is_available()
     # except Exception:
     #     print('not M1 arm')
-    # else:     
+    # else:
     #     device = "mps"
 
 
     print(device)
 
+    import os
+    checkpoint_path = os.path.join(mod_save_pth, "checkpoint.pt")
+    start_epoch = 0
     model = build_model(config_data)
+
 
     # Making use of multiple GPUs
     if device == "cuda" and torch.cuda.device_count() > 1:
@@ -112,6 +116,19 @@ def train_model(args):
         model = nn.DataParallel(model)
 
     model = model.to(device)
+
+    # Load checkpoint if exists
+    if os.path.exists(checkpoint_path):
+        print(f"Loading checkpoint from {checkpoint_path}")
+        checkpoint = torch.load(checkpoint_path, map_location=device)
+        if torch.cuda.device_count() > 1:
+            model.module.load_state_dict(checkpoint["model_state_dict"])
+        else:
+            model.load_state_dict(checkpoint["model_state_dict"])
+        start_epoch = checkpoint.get("epoch", 0) + 1
+        print(f"Resuming from epoch {start_epoch}")
+    else:
+        print("No checkpoint found, starting from scratch.")
 
     # Loading Data
     # Training data loader
@@ -153,7 +170,7 @@ def train_model(args):
     # Model Training
     lowest_val_loss = start_val_los
     early_stp_count = 0
-    
+
     with open(mod_save_pth + mod_name + "_" + mod_ver + "_epoch_accuracy.csv", "w") as fp:
             wr = csv.writer(fp, dialect='excel')
             wr.writerow(["train_micro_species_top1", "train_micro_genus_top1", "train_micro_family_top1",
@@ -161,7 +178,7 @@ def train_model(args):
                          "epoch"
             ])
 
-    for epoch in tqdm(range(epochs)): #range(0, 2)):
+    for epoch in tqdm(range(start_epoch, epochs)):
         train_loss = 0
         train_batch_cnt = 0
         val_loss = 0
@@ -222,16 +239,22 @@ def train_model(args):
         val_loss = val_loss / val_batch_cnt
         print("Checkpoint: Model evaluated")
 
+
+        # Save checkpoint every 3 epochs (overwrite last)
+        if (epoch + 1) % 3 == 0:
+            # Ensure directory exists
+            os.makedirs(mod_save_pth, exist_ok=True)
+            checkpoint_data = {
+                "epoch": epoch,
+                "model_state_dict": model.module.state_dict() if torch.cuda.device_count() > 1 else model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+            }
+            torch.save(checkpoint_data, checkpoint_path)
+            print(f"Checkpoint saved to: {checkpoint_path}")
+
         if val_loss < lowest_val_loss:
             if torch.cuda.device_count() > 1:
                 torch.save(
-                    # {
-                    #     "epoch": epoch,
-                    #     "model_state_dict": model.module.state_dict(),
-                    #     "optimizer_state_dict": optimizer.state_dict(),
-                    #     "train_loss": train_loss,
-                    #     "val_loss": val_loss,
-                    # },
                     model,
                     save_path,
                 )
@@ -245,17 +268,9 @@ def train_model(args):
                 )
             else:
                 torch.save(
-                    # {
-                    #     "epoch": epoch,
-                    #     "model_state_dict": model.state_dict(),
-                    #     "optimizer_state_dict": optimizer.state_dict(),
-                    #     "train_loss": train_loss,
-                    #     "val_loss": val_loss,
-                    # },
                     model,
                     save_path,
                 )
-                
                 torch.save(
                     {
                         "epoch": epoch,
@@ -295,15 +310,15 @@ def train_model(args):
                 "epoch": epoch,
             }
 
-        
+
         wandb.log(epoch_log)
-        
-        # append to csv         
+
+        # append to csv
         with open(mod_save_pth + mod_name + "_" + mod_ver + "_epoch_accuracy.csv", "a") as fp:
             wr = csv.writer(fp, dialect='excel')
             wr.writerow(list(epoch_log.values()))
-        
-        
+
+
         e_time = (time.time() - s_time) / 60  # time taken in minutes
         wandb.log({"time per epoch": e_time, "epoch": epoch})
 
